@@ -1,0 +1,6 @@
+include LICENSE NOTICE THIRD_PARTY_NOTICES.md SECURITY.md README.zh-CN.md CONTRIBUTING.md CHANGELOG.md AGENTS.md constraints-dev.txt
+recursive-include docs *.md *.txt
+recursive-include scripts *.py
+recursive-include tests *.py
+recursive-include examples *.py *.md *.toml *.json *.txt
+recursive-include .agents *.md

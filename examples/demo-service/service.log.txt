@@ -1,0 +1,1 @@
+ERROR dependency configuration missing; /health returns 503

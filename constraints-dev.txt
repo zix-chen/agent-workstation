@@ -1,0 +1,7 @@
+# Reproducible development/CI dependency versions from the initial local validation.
+PyJWT==2.14.0
+PyYAML==6.0.3
+build==1.6.1
+packaging==26.3
+pyproject-hooks==1.2.0
+ruff==0.16.7

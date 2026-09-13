@@ -1,0 +1,6 @@
+1. MCP discovery: target rules, backend-incident Skill and recipe found.
+2. Read full instructions, Skill, settings and evidence log through MCP.
+3. Actual HTTP before: {"http_status": 503, "body": {"status": "unhealthy", "reason": "missing_demo_upstream"}}
+4. Minimal correction: set DEMO_UPSTREAM=mock://ready in a fresh disposable process.
+5. Actual HTTP after: {"http_status": 200, "body": {"status": "ok", "reason": "ready"}}
+PASS: temporary processes stopped; no private systems, external model, UI or deployment involved.
