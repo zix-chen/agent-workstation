@@ -145,9 +145,7 @@ V0.1 is a small developer-tool release, not an enterprise platform. Computer/bro
 GUI secret filling, company-specific integrations, production deployment automation and a plugin
 marketplace are intentionally excluded. See [validation](docs/validation.md) for actual test results.
 
-The useful portfolio story is the design trade-off and reproducible evidence, not tool count
-or a claim to have built upstream's coding engine. [Design decisions](docs/architecture.md)
-explain what is inherited, what is added, and what remains unverified.
+[Design decisions](docs/architecture.md) cover the adapter architecture, trust model, and verification boundaries.
 
 ## License and attribution
 
