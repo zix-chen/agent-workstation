@@ -28,6 +28,7 @@ jobs:
       - run: python -B scripts/benchmark_output.py
       - run: python -B scripts/check_release.py
       - run: python -m build
+      - run: python scripts/prepare_release.py
   secrets:
     runs-on: ubuntu-latest
     timeout-minutes: 10

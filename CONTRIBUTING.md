@@ -12,3 +12,6 @@ to increase the catalog. Use API/CLI-first examples that run without company acc
 Never submit personal paths, private domains/IPs, real accounts, service credentials, cookies,
 production logs, or proprietary business code. Do not copy another repository's history.
 User-facing changes should update English and Chinese README summaries.
+
+Release packaging: run `python -m build` followed by `python scripts/prepare_release.py`.
+The latter removes build-machine ownership metadata from the sdist and emits SHA256SUMS.
