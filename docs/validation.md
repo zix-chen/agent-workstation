@@ -4,7 +4,7 @@ This file records only measurements from this release, not historical private-ru
 The repository's CI workflow is the authoritative record for its commit and OS/Python matrix.
 Local validation: 2026-09-13, macOS arm64, CPython 3.11.16 and 3.12.14, separate isolated project virtual environments.
 
-- 59 automated tests passed under each Python version, including real stdio handshake/tool calls and loopback HTTP bearer auth.
+- 62 automated tests passed under each Python version, including real stdio handshake/tool calls and loopback HTTP bearer auth.
 - Source-distribution owner/group metadata and timestamps are normalized before release; regression tests cover content preservation and unsafe archive rejection.
 - Ruff passed. Source hygiene/compat-boundary checks passed.
 - Deterministic MCP demo passed: actual local health 503 before configuration, 200 after a corrected process.
@@ -38,3 +38,7 @@ no browser/desktop/secret-filling tests; no production database/cloud/deployment
 no measured LLM task success, subscription quota reduction or token/cost savings.
 The fake-backend demo is deterministic, uses loopback networking and a temporary workspace,
 and cannot establish real enterprise service behavior.
+
+Version 0.1.0 passed hosted Linux checks but its hosted macOS HTTP startup test timed out.
+Version 0.1.1 removes reverse DNS from fixed-loopback binding and adds bind/readiness regressions.
+See the workflow results for the current commit rather than treating historical failures as passes.

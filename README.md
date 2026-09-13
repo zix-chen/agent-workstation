@@ -33,7 +33,7 @@ The package is installed from GitHub; it is not published to PyPI in this releas
 # An isolated environment; does not alter another MCP installation.
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "git+https://github.com/zix-chen/agent-workstation.git@v0.1.0"
+python -m pip install "git+https://github.com/zix-chen/agent-workstation.git@v0.1.1"
 agent-workstation --workspace /path/to/repository --doctor
 agent-workstation --workspace /path/to/repository --stdio
 ```

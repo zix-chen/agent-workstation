@@ -8,6 +8,7 @@ import sys
 import tempfile
 import time
 import unittest
+from unittest.mock import Mock, patch
 import urllib.error
 import urllib.request
 
@@ -50,6 +51,36 @@ class ProtocolTests(unittest.TestCase):
             self.assertEqual(result.returncode, 2)
             self.assertIn("Unsafe workspace", result.stderr)
             self.assertNotIn("Traceback", result.stderr)
+
+    def test_loopback_server_never_resolves_dns(self):
+        from agent_workstation.compat.coding_tools import LoopbackHTTPServer, server
+
+        runtime = Mock()
+        with patch("socket.getfqdn", side_effect=AssertionError("Reverse DNS must not run")):
+            httpd = LoopbackHTTPServer(("127.0.0.1", 0), server.MCPHandler, runtime)
+            try:
+                self.assertEqual(httpd.server_name, "127.0.0.1")
+                self.assertGreater(httpd.server_port, 0)
+            finally:
+                httpd.server_close()
+        runtime.close.assert_called_once()
+
+    def test_nonloopback_server_rejected_before_bind(self):
+        from agent_workstation.compat.coding_tools import LoopbackHTTPServer, server
+
+        with self.assertRaises(ValueError):
+            LoopbackHTTPServer(("0.0.0.0", 0), server.MCPHandler, Mock())
+
+    def test_failed_bind_preserves_os_error_and_closes_runtime(self):
+        from agent_workstation.compat.coding_tools import LoopbackHTTPServer, server
+
+        with socket.socket() as occupied:
+            occupied.bind(("127.0.0.1", 0))
+            occupied.listen()
+            runtime = Mock()
+            with self.assertRaises(OSError):
+                LoopbackHTTPServer(occupied.getsockname(), server.MCPHandler, runtime)
+            runtime.close.assert_called_once()
 
     def test_http_authentication(self):
         with tempfile.TemporaryDirectory() as d, socket.socket() as reserved:
@@ -100,6 +131,10 @@ class ProtocolTests(unittest.TestCase):
                             if process.poll() is not None:
                                 self.fail("HTTP process stopped during startup")
                             time.sleep(0.05)
+                    else:
+                        log.seek(0)
+                        diagnostic = log.read().replace(token, "<redacted>")
+                        self.fail("HTTP listener did not become ready. Startup output: " + diagnostic)
                     for bearer in (None, "wrong"):
                         headers = {
                             "Content-Type": "application/json",
@@ -110,6 +145,7 @@ class ProtocolTests(unittest.TestCase):
                         with self.assertRaises(urllib.error.HTTPError) as error:
                             opener.open(urllib.request.Request(url, data=data, headers=headers), timeout=5)
                         self.assertIn(error.exception.code, (401, 403))
+                        error.exception.close()
                     headers["Authorization"] = "Bearer " + token
                     with opener.open(
                         urllib.request.Request(url, data=data, headers=headers), timeout=5

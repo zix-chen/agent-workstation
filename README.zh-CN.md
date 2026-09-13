@@ -16,7 +16,7 @@
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
-python -m pip install "git+https://github.com/zix-chen/agent-workstation.git@v0.1.0"
+python -m pip install "git+https://github.com/zix-chen/agent-workstation.git@v0.1.1"
 agent-workstation --workspace /你的工作区 --doctor
 agent-workstation --workspace /你的工作区 --stdio
 ```

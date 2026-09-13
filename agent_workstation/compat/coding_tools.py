@@ -10,6 +10,7 @@ from importlib import metadata
 import os
 from pathlib import Path
 import shlex
+import socketserver
 
 from coding_tools_mcp import project_context, server
 
@@ -195,12 +196,28 @@ class WorkstationRuntime(server.Runtime):
         return result
 
 
+class LoopbackHTTPServer(server.RuntimeHTTPServer):
+    """A fixed loopback listener must not perform reverse DNS before listen()."""
+
+    def __init__(self, address, handler, runtime):
+        # HTTPServer closes itself when bind fails; upstream sets runtime after bind.
+        self.runtime = runtime
+        super().__init__(address, handler, runtime)
+
+    def server_bind(self):
+        if self.server_address[0] != "127.0.0.1":
+            raise ValueError("Only an IPv4 loopback listener is supported.")
+        socketserver.TCPServer.server_bind(self)
+        self.server_name = self.server_address[0]
+        self.server_port = self.server_address[1]
+
+
 def serve(runtime: WorkstationRuntime, *, transport: str, port: int) -> int:
     server.install_sigterm_handler()
     if transport == "stdio":
         return server.serve_stdio(runtime)
     try:
-        httpd = server.RuntimeHTTPServer(("127.0.0.1", port), server.MCPHandler, runtime)
+        httpd = LoopbackHTTPServer(("127.0.0.1", port), server.MCPHandler, runtime)
         try:
             import sys
 

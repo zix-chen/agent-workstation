@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Avoid reverse DNS during fixed-loopback HTTP listener startup.
+- Preserve and cleanly report socket bind failures; add readiness diagnostics and regressions.
+- Follow-up to hosted macOS HTTP-test startup timeouts in 0.1.0; published tags are not rewritten.
+
 ## 0.1.0
 
 Initial extracted, company-independent release:
