@@ -82,6 +82,20 @@ class ProtocolTests(unittest.TestCase):
                 LoopbackHTTPServer(occupied.getsockname(), server.MCPHandler, runtime)
             runtime.close.assert_called_once()
 
+    def test_demo_server_never_resolves_dns(self):
+        from importlib.util import module_from_spec, spec_from_file_location
+
+        path = Path(__file__).resolve().parents[1] / "examples/demo-service/service.py"
+        spec = spec_from_file_location("workstation_demo_fixture", path)
+        module = module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with patch("socket.getfqdn", side_effect=AssertionError("Demo reverse DNS must not run")):
+            httpd = module.DemoHTTPServer(("127.0.0.1", 0), module.Handler)
+            try:
+                self.assertEqual(httpd.server_name, "127.0.0.1")
+            finally:
+                httpd.server_close()
+
     def test_http_authentication(self):
         with tempfile.TemporaryDirectory() as d, socket.socket() as reserved:
             reserved.bind(("127.0.0.1", 0))

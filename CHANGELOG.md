@@ -2,7 +2,7 @@
 
 ## 0.1.1
 
-- Avoid reverse DNS during fixed-loopback HTTP listener startup.
+- Avoid reverse DNS during fixed-loopback HTTP listener and demo backend startup.
 - Preserve and cleanly report socket bind failures; add readiness diagnostics and regressions.
 - Follow-up to hosted macOS HTTP-test startup timeouts in 0.1.0; published tags are not rewritten.
 

@@ -4,6 +4,16 @@ import argparse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import os
+import socketserver
+
+
+class DemoHTTPServer(ThreadingHTTPServer):
+    """The isolated mock service does not need reverse DNS either."""
+
+    def server_bind(self):
+        socketserver.TCPServer.server_bind(self)
+        self.server_name = self.server_address[0]
+        self.server_port = self.server_address[1]
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -32,7 +42,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=0)
     args = parser.parse_args()
-    server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+    server = DemoHTTPServer(("127.0.0.1", args.port), Handler)
     print(json.dumps({"port": server.server_address[1]}), flush=True)
     try:
         server.serve_forever()
